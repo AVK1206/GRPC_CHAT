@@ -1,0 +1,32 @@
+syntax = "proto3";
+
+package chat;
+
+message User {
+  string login = 1;
+  string full_name = 2;
+}
+
+message Message {
+  string from_user = 1;
+  string to_user = 2;
+  int64 timestamp = 3;
+  string body = 4;
+}
+
+message UserList {
+  repeated User users = 1;
+}
+
+message MessageStream {
+  repeated Message messages = 1;
+}
+
+message Empty {}
+
+service ChatService {
+  rpc GetUserList (Empty) returns (UserList);
+  rpc SendMessage (Message) returns (Empty);
+  rpc GetMessages (Empty) returns (stream Message);
+  rpc Subscribe (Empty) returns (stream MessageStream);
+}
