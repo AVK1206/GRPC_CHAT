@@ -13,7 +13,7 @@ message UserListReply {
 }
 
 // Request to send a chat message.
-message ChatMessageRequest {
+message MessageRequest {
   string from_user = 1;
   string to_user = 2;
   int64 timestamp = 3;
@@ -21,7 +21,7 @@ message ChatMessageRequest {
 }
 
 // Reply containing a chat message.
-message ChatMessageReply {
+message GetMessageReply {
   string from_user = 1;
   string to_user = 2;
   int64 timestamp = 3;
@@ -29,28 +29,33 @@ message ChatMessageReply {
 }
 
 // Reply containing a stream of chat messages.
-message ChatMessageStreamReply {
-  repeated ChatMessageReply messages = 1;
+message SubscribeReply {
+  repeated GetMessageReply messages = 1;
 }
 
-// Empty request.
-message EmptyRequest {}
-
 // Empty reply.
-message EmptyReply {}
+message MessageReply {}
+
+// Empty request.
+message UserListRequest {}
+
+// Empty request.
+message GetMessageRequest {}
+
+// Empty request.
+message SubscribeRequest {}
 
 // ChatService provides RPC methods for chat functionality.
 service ChatService {
   // Get a list of users.
-  rpc GetUserList (EmptyRequest) returns (UserListReply);
+  rpc GetUserList (UserListRequest) returns (UserListReply);
 
   // Send a chat message.
-  rpc SendMessage (ChatMessageRequest) returns (EmptyReply);
+  rpc SendMessage (MessageRequest) returns (MessageReply);
 
   // Get a stream of chat messages.
-  rpc GetMessages (EmptyRequest) returns (stream ChatMessageReply);
+  rpc GetMessages (GetMessageRequest) returns (stream GetMessageReply);
 
   // Subscribe to a stream of chat messages.
-  rpc Subscribe (EmptyRequest) returns (stream ChatMessageStreamReply);
+  rpc Subscribe (SubscribeRequest) returns (stream SubscribeReply);
 }
-
