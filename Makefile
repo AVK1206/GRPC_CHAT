@@ -1,5 +1,5 @@
 # Source directory for protobuf files.
-SRC_DIR := ./protos
+SRC_DIR := ./GRPC-CHAT-PROTOS/protos
 # Build directory for generated Python files.
 BUILD_DIR := ./build
 # Protocol Buffer file to be compiled.
