@@ -1,0 +1,3 @@
+[submodule "GRPC-CHAT-PROTOS"]
+	path = GRPC-CHAT-PROTOS
+	url = https://github.com/AVK1206/GRPC-CHAT-PROTOS.git
