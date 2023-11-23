@@ -1,7 +1,3 @@
-[submodule "chat_protos"]
-	path = chat_protos
-	url = https://github.com/AVK1206/GRPC-CHAT-PROTOS.git
-	branch = master
 [submodule "protos"]
 	path = protos
 	url = https://github.com/AVK1206/GRPC-CHAT-PROTOS.git
