@@ -28,7 +28,7 @@ class ChatServiceServicer(chat_pb2_grpc.ChatServiceServicer):
         self.users = [chat_pb2.User(login="user1", full_name="John Wick"),
                       chat_pb2.User(login="user2", full_name="Johnny Depp")]
 
-        self.massages = []
+        self.messages = []
 
     def GetUsers(self, request, context):
         """Handles the GetUsers RPC call."""
@@ -36,7 +36,7 @@ class ChatServiceServicer(chat_pb2_grpc.ChatServiceServicer):
 
     def SendMessage(self, request, context):
         """Handles the SendMessage RPC call."""
-        self.massages.append(request.message)
+        self.messages.append(request.message)
         return chat_pb2.SendMessageReply()
 
     def Subscribe(self, request, context):
@@ -60,3 +60,5 @@ def serve():
 
 if __name__ == '__main__':
     serve()
+
+
