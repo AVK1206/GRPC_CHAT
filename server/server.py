@@ -1,5 +1,4 @@
-"""
-gRPC Chat Service Implementation.
+""" gRPC Chat Service Implementation.
 
 This script defines the implementation of a gRPC Chat Service using the provided
 protocol buffer messages and gRPC service definitions.
@@ -21,12 +20,12 @@ from build import chat_pb2_grpc
 
 
 class ChatServiceServicer(chat_pb2_grpc.ChatServiceServicer):
+    """ Implementation of the gRPC ChatServiceServicer what provides
+        the server-side logic for the gRPC chat service.
     """
-    Implementation of the gRPC ChatServiceServicer what provides
-    the server-side logic for the gRPC chat service.
-    """
+    
     def __init__(self):
-        """ Initializes the ChatServiceServicer."""
+        """Initializes the ChatServiceServicer."""
         self.users = [chat_pb2.User(login="user1", full_name="John Wick"),
                       chat_pb2.User(login="user2", full_name="Johnny Depp")]
 
@@ -42,7 +41,7 @@ class ChatServiceServicer(chat_pb2_grpc.ChatServiceServicer):
         return chat_pb2.SendMessageReply()
 
     def Subscribe(self, request, context):
-        """ Handles the Subscribe RPC call."""
+        """Handles the Subscribe RPC call."""
         user_login = request.login
         for message in self.messages:
             if message.to_user == user_login:
@@ -58,6 +57,7 @@ def serve():
     server.start()
     print("Server started. Waiting for termination...")
     server.wait_for_termination()
+
 
 
 if __name__ == '__main__':
