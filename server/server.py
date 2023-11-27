@@ -10,13 +10,16 @@ The server implements three RPC methods:
 
 The server uses the ChatServiceServicer class to handle these methods.
 
-To run the server, execute this script. The server will start on port 50052.
+To run the server, execute this script. The server will start on localhost:50052
+by default. A client can customize the host and port by providing different values
+to them.
 """
 
 import grpc
 from concurrent import futures
 from build import chat_pb2
 from build import chat_pb2_grpc
+from config import GRPC_HOST, GRPC_PORT
 
 
 class ChatServiceServicer(chat_pb2_grpc.ChatServiceServicer):
@@ -48,19 +51,24 @@ class ChatServiceServicer(chat_pb2_grpc.ChatServiceServicer):
                 yield message
 
 
-def serve():
+def serve(host, port):
     """Starts the gRPC server for the chat service."""
-    print("Starting server on port 50052...")
+    print(f"Starting server on {host}:{port}...")
     server = grpc.server(futures.ThreadPoolExecutor(max_workers=10))
-    chat_pb2_grpc.add_ChatServiceServicer_to_server(ChatServiceServicer(), server)
-    server.add_insecure_port("localhost:50052")
+    chat_pb2_grpc.add_ChatServiceServicer_to_server(ChatServiceServicer(),
+                                                    server)
+    server.add_insecure_port(f"{host}:{port}")
     server.start()
-    print("Server started. Waiting for termination...")
-    server.wait_for_termination()
+    try:
+        print("Server started. Waiting for termination...")
+        server.wait_for_termination()
+    except KeyboardInterrupt:
+        print("Server stopped.")
 
 
+if __name__ == "__main__":
+    serve(GRPC_HOST, GRPC_PORT)
 
-if __name__ == '__main__':
-    serve()
+
 
 
