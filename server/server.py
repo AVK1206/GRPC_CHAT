@@ -21,7 +21,10 @@ from build import chat_pb2_grpc
 
 
 class ChatServiceServicer(chat_pb2_grpc.ChatServiceServicer):
-    """Implementation of the gRPC ChatServiceServicer what provides the server-side logic for the gRPC chat service."""
+    """
+    Implementation of the gRPC ChatServiceServicer what provides
+    the server-side logic for the gRPC chat service.
+    """
     def __init__(self):
         """ Initializes the ChatServiceServicer."""
         self.users = [chat_pb2.User(login="user1", full_name="John Wick"),
