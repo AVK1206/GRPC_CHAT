@@ -17,8 +17,7 @@ to them.
 
 import grpc
 from concurrent import futures
-from build import chat_pb2
-from build import chat_pb2_grpc
+from build import chat_pb2, chat_pb2_grpc
 from config import GRPC_HOST, GRPC_PORT
 
 
@@ -68,7 +67,3 @@ def serve(host, port):
 
 if __name__ == "__main__":
     serve(GRPC_HOST, GRPC_PORT)
-
-
-
-
