@@ -1,6 +1,6 @@
 """ gRPC Chat Service Implementation.
 
-This script defines the implementation of a gRPC Chat Service using 
+This script defines the implementation of a gRPC Chat Service using
 the provided protocol buffer messages and gRPC service definitions.
 
 The server implements three RPC methods:
@@ -10,8 +10,8 @@ The server implements three RPC methods:
 
 The server uses the ChatServiceServicer class to handle these methods.
 
-To run the server, execute this script. The server will start 
-on localhost:50052 by default. A client can customize 
+To run the server, execute this script. The server will start
+on localhost:50052 by default. A client can customize
 the host and port by providing different values to them.
 """
 
@@ -25,7 +25,7 @@ class ChatServiceServicer(chat_pb2_grpc.ChatServiceServicer):
     """Implementation of the gRPC ChatServiceServicer what provides
     the server-side logic for the gRPC chat service.
     """
-    
+
     def __init__(self):
         """Initializes the ChatServiceServicer."""
         self.users = [chat_pb2.User(login="user1", full_name="John Wick"),
