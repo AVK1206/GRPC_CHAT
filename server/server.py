@@ -1,7 +1,7 @@
 """ gRPC Chat Service Implementation.
 
-This script defines the implementation of a gRPC Chat Service using the provided
-protocol buffer messages and gRPC service definitions.
+This script defines the implementation of a gRPC Chat Service using 
+the provided protocol buffer messages and gRPC service definitions.
 
 The server implements three RPC methods:
 1. GetUsers: Get a list of users.
@@ -10,9 +10,9 @@ The server implements three RPC methods:
 
 The server uses the ChatServiceServicer class to handle these methods.
 
-To run the server, execute this script. The server will start on localhost:50052
-by default. A client can customize the host and port by providing different values
-to them.
+To run the server, execute this script. The server will start 
+on localhost:50052 by default. A client can customize 
+the host and port by providing different values to them.
 """
 
 import grpc
