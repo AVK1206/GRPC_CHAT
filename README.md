@@ -50,9 +50,9 @@ Adjust these values in the 'config.py' file to customize the server configuratio
 
 The gRPC client can be configured through command-line options in the client.py script. The available options are:
 
---host: The host address for the gRPC server (default: "localhost").
---port: The port number for the gRPC server (default: 50052).
---user: The user login for the chat client (required).
+- '--host': The host address for the gRPC server (default: "localhost").
+- '--port': The port number for the gRPC server (default: 50052).
+- '--user': The user login for the chat client (required).
 
 Adjust these values as needed to customize the client configuration.
 
