@@ -1,4 +1,4 @@
-grpcio
-grpcio-tools
+grpcio=1.59.3
+grpcio-tools=1.59.3
 protobuf==3.20.3
-etcd3
+etcd3=0.12.0
