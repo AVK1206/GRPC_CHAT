@@ -25,7 +25,7 @@ setup(
         'protobuf',
         'etcd3'
     ],
-    description='''A simple client-server chat application using gRPC 
+    description='''A simple client-server chat application using gRPC
                 in Python with Etcd3 for message storage.
                 The server supports operations like retrieving
                 a list of users, sending messages,
