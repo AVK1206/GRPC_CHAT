@@ -17,6 +17,7 @@ the host and port by providing different values to them.
 
 import grpc
 from concurrent import futures
+
 from build import chat_pb2, chat_pb2_grpc
 from config import GRPC_HOST, GRPC_PORT
 
