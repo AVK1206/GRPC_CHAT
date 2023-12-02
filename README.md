@@ -41,10 +41,12 @@ python client.py --user <username>
 
 # Configuration
 
-The gRPC server can be configured through the 'config.py' file, which contains the following constants:
+The gRPC server and etcd can be configured through the 'config.py' file, which contains the following constants:
 
 - 'GRPC_CHAT_HOST': The host address for the gRPC server (default: "localhost").
 - 'GRPC_CHAT_PORT': The port number for the gRPC server (default: 50052).
+- 'ETCD_HOST': The etcd server host (default: "localhost").
+- 'ETCD_PORT': The etcd server port (default: 2379).
 
 Adjust these values in the 'config.py' file to customize the server configuration to your specific requirements.
 
