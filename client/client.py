@@ -59,9 +59,14 @@ def build_parser():
     """Build arguments parser for the command-line options."""
     parser = argparse.ArgumentParser(description="gRPC Chat Client")
     parser.add_argument("--host", type=str, default="localhost",
-                        help="Server host")
-    parser.add_argument("--port", type=int, default=50052, help="Server port")
-    parser.add_argument("--user", type=str, required=True, help="User login")
+                        help="Server host (default: localhost)")
+
+    parser.add_argument("--port", type=int, default=50053,
+                        help="Server port (default: 50053)")
+
+    parser.add_argument("--user", type=str, required=True,
+                        help="User login for the chat (required)")
+
     return parser
 
 
