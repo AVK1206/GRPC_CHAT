@@ -55,7 +55,7 @@ def subscribe(stub, login):
             f" to: {message.to_user})")
 
 
-ef build_parser():
+def build_parser():
     """Build arguments parser for the command-line options."""
     parser = argparse.ArgumentParser(description="gRPC Chat Client")
     parser.add_argument("--host", type=str, default="localhost",
