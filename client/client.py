@@ -48,14 +48,14 @@ def subscribe(stub, login):
     """
     request = chat_pb2.SubscribeRequest(login=login)
     messages = stub.Subscribe(request)
-    print(f"Subscribed to messages for {login}. Waiting for messages...")
+    print(f"Subscribed to messages for {login}.")
     for message in messages:
         print(
             f"Received message: {message.body} (from: {message.from_user},"
             f" to: {message.to_user})")
 
 
-def build_parser():
+ef build_parser():
     """Build arguments parser for the command-line options."""
     parser = argparse.ArgumentParser(description="gRPC Chat Client")
     parser.add_argument("--host", type=str, default="localhost",
@@ -67,18 +67,20 @@ def build_parser():
     parser.add_argument("--user", type=str, required=True,
                         help="User login for the chat (required)")
 
+    parser.add_argument("--action", type=str, required=True,
+                        choices=["get_users", "send_message", "subscribe"],
+                        help="""Action to perform
+                        get_users,
+                        send_message,
+                        subscribe.""")
+
+    parser.add_argument("--to_user", type=str, default=None,
+                        help="Receiving user for sending a message.")
+
+    parser.add_argument("--body", type=str, default=None,
+                        help="Message body for sending a message")
+
     return parser
-
-
-def choose_action():
-    """Display available actions and prompt the user for input."""
-    print("Please choose what you want")
-    print("1. Retrieve a list of users")
-    print("2. Send a chat message")
-    print("3. Subscribe to messages")
-    choice = input("Please enter the number of your choice"
-                   "or just something else to exit: ")
-    return choice
 
 
 def main():
@@ -89,21 +91,14 @@ def main():
     channel = grpc.insecure_channel(f"{args.host}:{args.port}")
     stub = chat_pb2_grpc.ChatServiceStub(channel)
 
-    while True:
-        action_choice = choose_action()
-
-        match action_choice:
-            case "1":
-                get_users(stub)
-            case "2":
-                to_user = input("Enter the username to send a message to: ")
-                body = input("Enter the message body: ")
-                send_message(stub, args.user, to_user, body)
-            case "3":
-                subscribe(stub, args.user)
-            case _:
-                print("Exiting...")
-                break
+    if args.action == "get_users":
+        get_users(stub)
+    elif args.action == "send_message":
+        to_user = args.to_user
+        body = args.body
+        send_message(stub, args.user, to_user, body)
+    elif args.action == "subscribe":
+        subscribe(stub, args.user)
 
 
 if __name__ == "__main__":
