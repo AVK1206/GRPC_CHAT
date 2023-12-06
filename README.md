@@ -19,42 +19,77 @@ This directory contains the server-side implementation of a gRPC Chat Service. T
     git clone https://github.com/AVK1206/GRPC_CHAT.git
     cd server
     ```
+   
+2. Create a Virtual Environment:
+   
+   ```
+   python3 -m venv venv
+   ```
+   
+3. Activate the Virtual Environment:
+   
+   ```
+   source venv/bin/activate
+   ```
 
-2. Install the required dependencies:
+4. Install the required dependencies:
 
     ```
     pip install -r requirements.txt
     ```
-
+   
 # Usage
 
-To run the server, execute the following script. The server will start on port 50052.
+1. Run the server:
 
-```
-python server.py
-```
+   ```
+   python3 server.py
+   ```
 
-To run the client, use the following script. Make sure to replace `<username>` with the desired username:
-```
-python client.py --user <username>
-```
-
+2. Open a new terminal window, activate the virtual environment, and run the client:
+   
+   ```
+   source venv/bin/activate
+   python3 client.py --user <username> --action <action: 
+   Retrieve a list of users,
+   Send a message,
+   Subscribe to messages.>
+   ```
+   
+3. Retrieve a list of users:
+   
+   ```
+   python3 client.py --user <username> --action get_users
+   ```
+   
+4. Send a message from one user to another:
+   
+   ```
+   python3 client.py --user <from_user> --action send_message --to_user <to_user> --body "Your message here"
+   ```
+   
+5. Subscribe to messages for a user:
+   
+   ```
+   python3 client.py --user <username> --action subscribe
+   ```
+   
 # Configuration
 
 The gRPC server can be configured through the 'config.py' file, which contains the following constants:
 
 - 'GRPC_CHAT_HOST': The host address for the gRPC server (default: "localhost").
-- 'GRPC_CHAT_PORT': The port number for the gRPC server (default: 50052).
+- 'GRPC_CHAT_PORT': The port number for the gRPC server (default: 50053).
 
 Adjust these values in the 'config.py' file to customize the server configuration to your specific requirements.
 
 The gRPC client can be configured through command-line options in the client.py script. The available options are:
 
 - '--host': The host address for the gRPC server (default: "localhost").
-- '--port': The port number for the gRPC server (default: 50052).
+- '--port': The port number for the gRPC server (default: 50053).
 - '--user': The user login for the chat client (required).
+- '--action': The action to perform, available options are "get_users", "send_message", and "subscribe".
 
-Adjust these values as needed to customize the client configuration.
 
 # License
 This gRPC Chat application is distributed under the MIT License. See the LICENSE file for more details.
