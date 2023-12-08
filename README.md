@@ -37,7 +37,14 @@ This directory contains the server-side implementation of a gRPC Chat Service. T
     ```
     pip install -r requirements.txt
     ```
-   
+
+
+# Run the etcd server in a separate terminal:
+
+    ```
+    etcd
+    ```
+
 # Usage
 
 1. Run the server:
