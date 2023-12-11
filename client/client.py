@@ -13,12 +13,18 @@ Usage:
 
 Examples:
     # Run the client with default settings
-    client.py --user user1
+    client.py --user user1 or -u user1
 
     # Specify custom server host and port
-    client.py --host localhost --port 50051 --user user2
+    client.py [--host or -H] localhost [--port or -p] 50053
+    [--user or -u] [--action or -a] [--body or -b]
+
+    client.py -H localhost -p 50053 -u user1 -a get_users
+    client.py -u user1 -a send_message -t user2 -b "Hey"
+    client.py -u user1 -a subscribe.
 """
 
+import sys
 import grpc
 import argparse
 
@@ -58,39 +64,51 @@ def subscribe(stub, login):
 def build_parser():
     """Build arguments parser for the command-line options."""
     parser = argparse.ArgumentParser(description="gRPC Chat Client")
-    parser.add_argument("--host", type=str, default="localhost",
+    parser.add_argument("-H", "--host", type=str,
+                        default="localhost",
                         help="Server host (default: localhost)")
 
-    parser.add_argument("--port", type=int, default=50053,
+    parser.add_argument("-p", "--port", type=int, default=50053,
                         help="Server port (default: 50053)")
 
-    parser.add_argument("--user", type=str, required=True,
+    parser.add_argument("-u", "--user", type=str,
                         help="User login for the chat (required)")
 
-    parser.add_argument("--action", type=str, required=True,
+    parser.add_argument("-a", "--action", type=str, required=True,
                         choices=["get_users", "send_message", "subscribe"],
                         help="""Action to perform
                         get_users,
                         send_message,
                         subscribe.""")
 
-    parser.add_argument("--to_user", type=str, default=None,
+    parser.add_argument("-t", "--to_user", type=str, default=None,
                         help="Receiving user for sending a message.")
 
-    parser.add_argument("--body", type=str, default=None,
+    parser.add_argument("-b", "--body", type=str, default=None,
                         help="Message body for sending a message")
 
     return parser
 
 
-def main():
-    """Main function for the gRPC Chat Client."""
-    parser = build_parser()
-    args = parser.parse_args()
+def check_args(args):
+    """Check command-line arguments and raise custom exceptions
+    for missing required arguments user and body in send_message
+    and user in all methods.
+    """
+    if args.action == "send_message" and (not args.to_user or not args.body):
+        raise ValueError("""send_message --to_user and --body are required.
+                               --to_user or -t: Who sends the message
+                               --body or -b: The message""")
+    if (args.action in ["get_users", "send_message", "subscribe"]
+            and not args.user):
+        raise ValueError("The method requires --user or -u.\n"
+                         "--user or -u: Who calls the method.")
 
-    channel = grpc.insecure_channel(f"{args.host}:{args.port}")
-    stub = chat_pb2_grpc.ChatServiceStub(channel)
 
+def perform_action(stub, args):
+    """Perform the action based on the provided
+    command-line arguments.
+    """
     if args.action == "get_users":
         get_users(stub)
     elif args.action == "send_message":
@@ -99,6 +117,22 @@ def main():
         send_message(stub, args.user, to_user, body)
     elif args.action == "subscribe":
         subscribe(stub, args.user)
+
+
+def main():
+    """Main function for the gRPC Chat Client."""
+    parser = build_parser()
+    args = parser.parse_args()
+
+    try:
+        check_args(args)
+    except ValueError as error:
+        print(f"{error}")
+        sys.exit(1)
+
+    with grpc.insecure_channel(f"{args.host}:{args.port}") as channel:
+        stub = chat_pb2_grpc.ChatServiceStub(channel)
+        perform_action(stub, args)
 
 
 if __name__ == "__main__":
