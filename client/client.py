@@ -149,7 +149,7 @@ def main():
     parser = build_parser()
     args = parser.parse_args()
 
-     with grpc.insecure_channel(f"{args.host}:{args.port}") as channel:
+    with grpc.insecure_channel(f"{args.host}:{args.port}") as channel:
         stub = chat_pb2_grpc.ChatServiceStub(channel)
         try:
             perform_action(stub, args)
