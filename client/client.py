@@ -60,7 +60,6 @@ class MissingMessageDetailsException(Exception):
                 "and --body or -b arguments.")
 
 
-
 def get_users(stub):
     """Get a list of users from the chat server to the current user."""
     request = chat_pb2.GetUsersRequest()
