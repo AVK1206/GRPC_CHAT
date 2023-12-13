@@ -19,20 +19,27 @@ This directory contains the server-side implementation of a gRPC Chat Service. T
     git clone https://github.com/AVK1206/GRPC_CHAT.git
     cd server
     ```
+    
+2. Initialize and update the submodule:
+
+   ```
+   git submodule init
+   git submodule update
+   ```
    
-2. Create a Virtual Environment:
+3. Create a Virtual Environment:
    
    ```
    python3 -m venv venv
    ```
    
-3. Activate the Virtual Environment:
+4. Activate the Virtual Environment:
    
    ```
    source venv/bin/activate
    ```
 
-4. Install the required dependencies:
+5. Install the required dependencies:
 
     ```
     pip install -r requirements.txt
