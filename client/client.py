@@ -25,10 +25,40 @@ Examples:
 """
 
 import sys
+
 import grpc
 import argparse
 
 from build import chat_pb2, chat_pb2_grpc
+
+
+class MissingUserException(Exception):
+    """Exception raised when the user argument is missing."""
+
+    def __init__(self, action):
+        """Initialize the MissingUserException with the action name."""
+        self.action = action
+
+    def __str__(self):
+        """Return a formatted error message indicating
+        the missing user argument.
+        """
+        return (f"The --user or -u argument is required "
+                f"for the {self.action} action.")
+
+
+class MissingMessageDetailsException(Exception):
+    """Exception raised when message details are missing
+    in send_message action.
+    """
+
+    def __str__(self):
+        """Return a formatted error message indicating
+        the missing message details.
+        """
+        return ("send_message requires --to_user or -t "
+                "and --body or -b arguments.")
+
 
 
 def get_users(stub):
@@ -90,32 +120,27 @@ def build_parser():
     return parser
 
 
-def check_args(args):
-    """Check command-line arguments and raise custom exceptions
-    for missing required arguments user and body in send_message
-    and user in all methods.
-    """
-    if args.action == "send_message" and (not args.to_user or not args.body):
-        raise ValueError("""send_message --to_user and --body are required.
-                               --to_user or -t: Who sends the message
-                               --body or -b: The message""")
-    if (args.action in ["get_users", "send_message", "subscribe"]
-            and not args.user):
-        raise ValueError("The method requires --user or -u.\n"
-                         "--user or -u: Who calls the method.")
-
-
 def perform_action(stub, args):
     """Perform the action based on the provided
     command-line arguments.
+    This function also checks for the required arguments for each
+    action and raises custom exceptions if they are missing.
     """
     if args.action == "get_users":
+        if not args.user:
+            raise MissingUserException("get_users")
         get_users(stub)
+
     elif args.action == "send_message":
-        to_user = args.to_user
-        body = args.body
-        send_message(stub, args.user, to_user, body)
+        if not args.user:
+            raise MissingUserException("send_message")
+        if not args.to_user or not args.body:
+            raise MissingMessageDetailsException()
+        send_message(stub, args.user, args.to_user, args.body)
+
     elif args.action == "subscribe":
+        if not args.user:
+            raise MissingUserException("subscribe")
         subscribe(stub, args.user)
 
 
@@ -124,15 +149,16 @@ def main():
     parser = build_parser()
     args = parser.parse_args()
 
-    try:
-        check_args(args)
-    except ValueError as error:
-        print(f"{error}")
-        sys.exit(1)
-
-    with grpc.insecure_channel(f"{args.host}:{args.port}") as channel:
+     with grpc.insecure_channel(f"{args.host}:{args.port}") as channel:
         stub = chat_pb2_grpc.ChatServiceStub(channel)
-        perform_action(stub, args)
+        try:
+            perform_action(stub, args)
+        except MissingUserException as user_error:
+            print(f"{user_error}")
+            sys.exit(1)
+        except MissingMessageDetailsException as message_error:
+            print(f"{message_error}")
+            sys.exit(1)
 
 
 if __name__ == "__main__":
