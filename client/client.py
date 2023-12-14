@@ -24,8 +24,9 @@ Examples:
     client.py -u user1 -a subscribe.
 """
 
-import grpc
 import argparse
+
+import grpc
 
 from build import chat_pb2, chat_pb2_grpc
 
