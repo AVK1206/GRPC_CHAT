@@ -110,7 +110,6 @@ def perform_action(stub, args):
     action and raises custom exceptions if they are missing.
     """
     if args.action == "get_users":
-        check_required_arguments(args, ["user"])
         get_users(stub)
 
     elif args.action == "send_message":
