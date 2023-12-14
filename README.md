@@ -23,8 +23,7 @@ This directory contains the server-side implementation of a gRPC Chat Service. T
 2. Initialize and update the submodule:
 
    ```
-   git submodule init
-   git submodule update
+   git submodule update --init --recursive
    ```
    
 3. Create a Virtual Environment:
