@@ -13,4 +13,4 @@ Constants:
 import os
 
 GRPC_HOST = os.environ.get("GRPC_CHAT_HOST", "localhost")
-GRPC_PORT = int(os.environ.get("GRPC_CHAT_PORT", 50052))
+GRPC_PORT = int(os.environ.get("GRPC_CHAT_PORT", 50053))
