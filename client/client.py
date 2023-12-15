@@ -24,8 +24,10 @@ Examples:
     client.py -u user1 -a subscribe.
 """
 
-import grpc
 import argparse
+from datetime import datetime as dt
+
+import grpc
 
 from build import chat_pb2, chat_pb2_grpc
 
@@ -54,7 +56,9 @@ def get_users(stub):
 
 def send_message(stub, from_user, to_user, body):
     """Send a chat message from the current user to any user."""
-    message = chat_pb2.Message(from_user=from_user, to_user=to_user, body=body)
+    timestamp = int(dt.now().timestamp())
+    message = chat_pb2.Message(from_user=from_user, to_user=to_user, body=body,
+                               timestamp=timestamp)
     request = chat_pb2.SendMessageRequest(message=message)
     stub.SendMessage(request)
     print(f"Message sent from {from_user} to {to_user}: {body}")
@@ -110,7 +114,6 @@ def perform_action(stub, args):
     action and raises custom exceptions if they are missing.
     """
     if args.action == "get_users":
-        check_required_arguments(args, ["user"])
         get_users(stub)
 
     elif args.action == "send_message":
