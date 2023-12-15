@@ -2,5 +2,3 @@ grpcio
 grpcio-tools
 protobuf
 etcd3
-emoji
-langdetect
