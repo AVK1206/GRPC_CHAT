@@ -11,15 +11,17 @@ The server implements three RPC methods:
 The server uses the ChatServiceServicer class to handle these methods.
 
 To run the server, execute this script. The server will start
-on localhost:50052 by default. A client can customize
+on localhost:50053 by default. A client can customize
 the host and port by providing different values to them.
 """
 
-import grpc
 from concurrent import futures
+
+import grpc
 
 from build import chat_pb2, chat_pb2_grpc
 from config import GRPC_HOST, GRPC_PORT
+from storage.etcd_storage import EtcdStorage
 
 
 class ChatServiceServicer(chat_pb2_grpc.ChatServiceServicer):
@@ -28,27 +30,42 @@ class ChatServiceServicer(chat_pb2_grpc.ChatServiceServicer):
     """
 
     def __init__(self):
-        """Initializes the ChatServiceServicer."""
-        self.users = [chat_pb2.User(login="user1", full_name="John Wick"),
-                      chat_pb2.User(login="user2", full_name="Johnny Depp")]
-
-        self.messages = []
+        """Initializes the ChatServiceServicer with
+        an EtcdStorage instance.
+        """
+        self.storage = EtcdStorage()
 
     def GetUsers(self, request, context):
-        """Handles the GetUsers RPC call."""
-        return chat_pb2.GetUsersReply(users=self.users)
+        """Handles the GetUsers RPC call
+        retrieving all users from storage.
+        """
+        users = [user.to_pb() for user in self.storage.get_all_users()]
+        return chat_pb2.GetUsersReply(users=users)
 
     def SendMessage(self, request, context):
-        """Handles the SendMessage RPC call."""
-        self.messages.append(request.message)
+        """Handles the SendMessage RPC call
+        storing the sent message in etcd.
+        """
+        self.storage.save_message(request.message)
         return chat_pb2.SendMessageReply()
 
     def Subscribe(self, request, context):
-        """Handles the Subscribe RPC call."""
+        """Handles the Subscribe RPC call
+        streaming messages to the user.
+        """
         user_login = request.login
-        for message in self.messages:
-            if message.to_user == user_login:
-                yield message
+        storage = EtcdStorage()
+        all_messages = storage.get_messages(user_login)
+        for message in all_messages:
+            yield message.to_pb()
+
+        last_sent_timestamp = all_messages[-1].timestamp if all_messages else 0
+        while context.is_active():
+            new_messages = storage.get_messages(user_login,
+                                                last_sent_timestamp)
+            for message in new_messages:
+                yield message.to_pb()
+                last_sent_timestamp = message.timestamp
 
 
 def serve(host, port):
